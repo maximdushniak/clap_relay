@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:leonardo",
+    "port": "COM1",
+    "sketch": "clap_relay.ino"
+}
