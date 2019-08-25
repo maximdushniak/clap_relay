@@ -1,3 +1,5 @@
+// TEST
+
 #define NOISE_PIN 5     // пин датчика уровня шума
 #define RELAY_PIN 4     // пин рэле
 #define difficulty 100  // миллисекунд на реакцию (плюс минус)
