@@ -9,7 +9,11 @@ bool write_start = false; // флаг начала записи
 unsigned last_knock = 0; // время последнего хлопка
 unsigned knock_time;
 
-int wait_time[max_knock];
+unsigned wait_time[max_knock];
+
+volatile byte mode; // 0- ; 1- ; 2-.
+
+byte mode_1 = 0;
 
 void setup() {
   
@@ -17,15 +21,31 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   pinMode(NOISE_PIN, INPUT);
 
+  knockWrite();
+
 }
 
 
 void loop() {
   
-  bool is_clap = !digitalRead(NOISE_PIN);
-
   
-  if(is_clap && !state_on) {
+
+
+  //bool is_clap = !digitalRead(NOISE_PIN);
+
+  if (mode_1 == 0)
+  {
+    Serial.println("Write array:");
+    for (byte i = 0; i < max_knock; i++)
+    {
+      Serial.println(wait_time[i]);
+    }
+    mode_1 = 1;
+  }
+  
+  
+
+   /* if(is_clap && !state_on) {
 
     state_on = true;
     digitalWrite(RELAY_PIN, HIGH);
@@ -42,12 +62,18 @@ void loop() {
     
     Serial.println("OFF!");
       
-    }
+    } */
   
 }
 
 
 void knockWrite() { // запись хлопков
+
+  delay(1000);
+  Serial.println("Popytka )");
+  
+  byte knock = 0;
+
   last_knock = millis();
 
   bool is_clap = !digitalRead(NOISE_PIN);
@@ -55,12 +81,14 @@ void knockWrite() { // запись хлопков
   {
     if (millis() - last_knock > 5000)
     {
+      Serial.println("Dont write!!!");
       write_start = false;
       break;
     }
-    
-    if (is_clap) {
+    is_clap = !digitalRead(NOISE_PIN);
 
+    if (is_clap) {
+      Serial.println("Start write!!!");
       write_start = true;
       last_knock = millis();
       break;
@@ -72,13 +100,26 @@ void knockWrite() { // запись хлопков
   {
     while (1)
     {
-      is_clap = !digitalRead(NOISE_PIN);
+     //is_clap = !digitalRead(NOISE_PIN);
       if (is_clap)
       {
         knock_time = millis() - last_knock;
-        
+        wait_time[knock] = knock_time;
+        knock++;
+        last_knock = millis();
+        is_clap = false;
+        Serial.println("knock!");
+        is_clap = false;
+        if (knock == max_knock)
+        {
+          break;
+        }
+        /*if (millis() - last_knock > 3000)
+        {
+          break;
+        } */
       }
-      
+    is_clap = !digitalRead(NOISE_PIN);
     }
     
   }
