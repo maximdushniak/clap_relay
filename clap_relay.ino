@@ -100,7 +100,8 @@ void knockWrite() { // запись хлопков
   {
     unsigned start_time = last_knock;
     while (1)
-    {
+    { 
+      delay(50);
       is_clap = !digitalRead(NOISE_PIN);
       if (is_clap)
       {
