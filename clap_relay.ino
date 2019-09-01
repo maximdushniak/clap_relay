@@ -28,9 +28,6 @@ void setup() {
 
 void loop() {
   
-  
-
-
   //bool is_clap = !digitalRead(NOISE_PIN);
 
   if (mode_1 == 0)
@@ -101,9 +98,10 @@ void knockWrite() { // запись хлопков
   
   if (write_start)
   {
+    unsigned start_time = last_knock;
     while (1)
     {
-     //is_clap = !digitalRead(NOISE_PIN);
+      is_clap = !digitalRead(NOISE_PIN);
       if (is_clap)
       {
         knock_time = millis() - last_knock;
@@ -113,7 +111,7 @@ void knockWrite() { // запись хлопков
         is_clap = false;
         Serial.println("knock!");
         is_clap = false;
-        if (knock == max_knock)
+        if (knock == max_knock || millis()-start_time)
         {
           break;
         }
@@ -122,11 +120,8 @@ void knockWrite() { // запись хлопков
           break;
         } */
       }
-    is_clap = !digitalRead(NOISE_PIN);
+    // is_clap = !digitalRead(NOISE_PIN);
     }
     
   }
-  
-
-  
 }
