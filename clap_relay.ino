@@ -7,9 +7,9 @@
 bool state_on = false; // система выключена
 bool write_start = false; // флаг начала записи
 unsigned last_knock = 0; // время последнего хлопка
-unsigned knock_time;
+// unsigned knock_time;
 
-unsigned wait_time[max_knock];
+unsigned wait_time[max_knock], max_wait_time[max_knock], min_wait_time[max_knock];
 
 volatile byte mode; // 0- ; 1- ; 2-.
 
@@ -69,22 +69,25 @@ void loop() {
 
 void knockWrite() { // запись хлопков
 
-  delay(1000);
-  Serial.println("Popytka )");
-  
-  byte knock = 0;
+  byte knock = 0; // индекс (номер хлопка)  для записи в массив
+  bool is_clap = false;
+  unsigned knock_time;
 
+  delay(1000);
+  Serial.println("Write start");
+    
+  
   last_knock = millis();
 
-  bool is_clap = !digitalRead(NOISE_PIN);
   while (1)
   {
     if (millis() - last_knock > 5000)
     {
-      Serial.println("Dont write!!!");
+      Serial.println("Timeout!");
       write_start = false;
       break;
     }
+    
     is_clap = !digitalRead(NOISE_PIN);
 
     if (is_clap) {
